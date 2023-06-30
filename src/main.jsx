@@ -5,7 +5,7 @@ import './index.css'
 import App from "./AppSecond.jsx"
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <App></App>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )
