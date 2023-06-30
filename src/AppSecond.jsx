@@ -2,6 +2,8 @@ import {useState, useEffect} from "react";
 import axios from "axios";
 
 function App() {
+    document.title = 'spotify-stats'
+
     const CLIENT_ID = import.meta.env.VITE_CLIENT_ID
     const REDIRECT_URI = "http://localhost:5173/callback"
     const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
@@ -12,7 +14,20 @@ function App() {
     const [searchKey, setSearchKey] = useState("")
     const [artists, setArtists] = useState([])
 
+    const [accessToken, setAccessToken] = useState("");
+
     useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get("code");
+
+        if (!code) {
+            redirectToAuthCodeFlow(CLIENT_ID);
+        } else {
+            const accessToken = getAccessToken(CLIENT_ID, code);
+        }
+
+        // console.log(accessToken);
+    
         const hash = window.location.hash
         let token = window.localStorage.getItem("token")
 
@@ -25,7 +40,55 @@ function App() {
 
         setToken(token)
 
+        async function getAccessToken(CLIENT_ID, code) {
+            const verifier = localStorage.getItem("verifier");
+            const paramsSecond = new URLSearchParams();
+            
+            paramsSecond.append("client_id", CLIENT_ID)
+            paramsSecond.append("grant_type", "authorization_code");
+            paramsSecond.append("code", code);
+            paramsSecond.append("redirect_uri", "http://localhost:5173/callback");
+            paramsSecond.append("code_verifier", verifier);
+    
+            const response = fetch('https://accounts.spotify.com/api/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: paramsSecond
+            })
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('HTTP status ' + response.status);
+                }
+                return response.json();
+                // setAccessToken(response);
+            })
+            .then(data => {
+                localStorage.setItem('access_token', data.access_token);
+                // console.log("data:", data)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        getProfile(localStorage.getItem('access_token'));
     }, [])
+
+    async function getProfile(accessTokenn) {
+        let accessToken = localStorage.getItem('access_token');
+      
+        const response = await fetch('https://api.spotify.com/v1/me', {
+          headers: {
+            Authorization: 'Bearer ' + accessTokenn
+          }
+        });
+      
+        const data = await response.json();
+        console.log(data);
+    }
+
 
     const logout = () => {
         setToken("")
@@ -54,6 +117,43 @@ function App() {
                 {artist.name}
             </div>
         ))
+    }
+
+    //redirect to spotify login page
+    async function redirectToAuthCodeFlow(clientId) {
+        const verifier = generateCodeVerifier(128);
+        const challenge = await generateCodeChallenge(verifier);
+    
+        localStorage.setItem("verifier", verifier);
+    
+        const params = new URLSearchParams();
+        params.append("client_id", clientId);
+        params.append("response_type", "code");
+        params.append("redirect_uri", "http://localhost:5173/callback");
+        params.append("scope", "user-read-private user-read-email");
+        params.append("code_challenge_method", "S256");
+        params.append("code_challenge", challenge);
+    
+        document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
+    }
+
+    function generateCodeVerifier(length) {
+        let text = '';
+        let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    
+        for (let i = 0; i < length; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
+    }
+    
+    async function generateCodeChallenge(codeVerifier) {
+        const data = new TextEncoder().encode(codeVerifier);
+        const digest = await window.crypto.subtle.digest('SHA-256', data);
+        return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
     }
 
     return (
