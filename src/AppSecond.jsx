@@ -15,6 +15,8 @@ function App() {
     const [artists, setArtists] = useState([])
 
     const [accessToken, setAccessToken] = useState("");
+ 
+    const [topItems, setTopItems] = useState([]);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -41,11 +43,11 @@ function App() {
         setToken(token)
 
         // getProfile(localStorage.getItem('access_token'));
-        getMediumTermTopArtist(localStorage.getItem('access_token'));
-        
+        getTopItems(localStorage.getItem('access_token'), 'tracks', 'short_term');
         // console.log(localStorage.getItem('access_token'));
     }, [])
     
+    // console.log(topItems);
     
     async function getAccessToken(CLIENT_ID, code) {
         const verifier = localStorage.getItem("verifier");
@@ -102,11 +104,26 @@ function App() {
                 }
             });
             const data = await response.json();
-            console.log('top artists: ', data);
+            setTopItems(data.items);
         } catch (err) {
             console.error(err);
         }
-      
+    }
+
+    async function getTopItems(accessTokenn, itemType, timeRange) {
+        console.log(`https://api.spotify.com/v1/me/top/${itemType}`)
+        try {
+            const response = await fetch(`https://api.spotify.com/v1/me/top/${itemType}?time_range=${timeRange}`, {
+                headers: {
+                   Authorization: 'Bearer ' + accessTokenn
+                }
+            });
+            const data = await response.json();
+            // console.log(data);
+            setTopItems(data.items);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     const logout = () => {
@@ -134,6 +151,14 @@ function App() {
             <div key={artist.id}>
                 {artist.images.length ? <img width={"100%"} src={artist.images[0].url} alt=""/> : <div>No Image</div>}
                 {artist.name}
+            </div>
+        ))
+    }
+
+    const renderTopItems = () => {
+        return topItems.map(item => (
+            <div key={item.id}>
+                {item.name}
             </div>
         ))
     }
@@ -189,6 +214,7 @@ function App() {
                 <button type={"submit"}>Search</button>
             </form>
             {renderArtists()}
+            {renderTopItems()}
         </div>
     );
 }
