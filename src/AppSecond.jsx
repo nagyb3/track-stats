@@ -40,44 +40,48 @@ function App() {
 
         setToken(token)
 
-        async function getAccessToken(CLIENT_ID, code) {
-            const verifier = localStorage.getItem("verifier");
-            const paramsSecond = new URLSearchParams();
-            
-            paramsSecond.append("client_id", CLIENT_ID)
-            paramsSecond.append("grant_type", "authorization_code");
-            paramsSecond.append("code", code);
-            paramsSecond.append("redirect_uri", "http://localhost:5173/callback");
-            paramsSecond.append("code_verifier", verifier);
-    
-            const response = fetch('https://accounts.spotify.com/api/token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: paramsSecond
-            })
-            .then(response => {
-                if (!response.ok) {
-                throw new Error('HTTP status ' + response.status);
-                }
-                return response.json();
-                // setAccessToken(response);
-            })
-            .then(data => {
-                localStorage.setItem('access_token', data.access_token);
-                // console.log("data:", data)
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-
-        getProfile(localStorage.getItem('access_token'));
+        // getProfile(localStorage.getItem('access_token'));
+        getMediumTermTopArtist(localStorage.getItem('access_token'));
+        
+        // console.log(localStorage.getItem('access_token'));
     }, [])
+    
+    
+    async function getAccessToken(CLIENT_ID, code) {
+        const verifier = localStorage.getItem("verifier");
+        const paramsSecond = new URLSearchParams();
+        
+        paramsSecond.append("client_id", CLIENT_ID)
+        paramsSecond.append("grant_type", "authorization_code");
+        paramsSecond.append("code", code);
+        paramsSecond.append("redirect_uri", "http://localhost:5173/callback");
+        paramsSecond.append("code_verifier", verifier);
+
+        const response = fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: paramsSecond
+        })
+        .then(response => {
+            if (!response.ok) {
+            throw new Error('HTTP status ' + response.status);
+            }
+            return response.json();
+            // setAccessToken(response);
+        })
+        .then(data => {
+            localStorage.setItem('access_token', data.access_token);
+            // console.log("data:", data)
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
 
     async function getProfile(accessTokenn) {
-        let accessToken = localStorage.getItem('access_token');
+        // let accessToken = localStorage.getItem('access_token');
       
         const response = await fetch('https://api.spotify.com/v1/me', {
           headers: {
@@ -89,6 +93,21 @@ function App() {
         console.log(data);
     }
 
+
+    async function getMediumTermTopArtist(accessTokenn) {
+        try {
+            const response = await fetch('https://api.spotify.com/v1/me/top/artists', {
+                headers: {
+                   Authorization: 'Bearer ' + accessTokenn
+                }
+            });
+            const data = await response.json();
+            console.log('top artists: ', data);
+        } catch (err) {
+            console.error(err);
+        }
+      
+    }
 
     const logout = () => {
         setToken("")
@@ -130,7 +149,7 @@ function App() {
         params.append("client_id", clientId);
         params.append("response_type", "code");
         params.append("redirect_uri", "http://localhost:5173/callback");
-        params.append("scope", "user-read-private user-read-email");
+        params.append("scope", "user-top-read user-read-private user-read-email");
         params.append("code_challenge_method", "S256");
         params.append("code_challenge", challenge);
     
