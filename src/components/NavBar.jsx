@@ -7,7 +7,7 @@ export default function NavBar(props) {
                 spotify-stats
             </h1>
             <ul>
-                <li className="logout" onClick={(() => props.logout())}>logout</li>
+                { props.isLoggedIn && <li className="logout" onClick={(() => props.logout())}>logout</li> }
             </ul>
         </nav>
     )

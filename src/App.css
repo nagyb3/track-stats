@@ -73,3 +73,15 @@ nav ul {
 nav .logout:hover {
   cursor: pointer;
 }
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 100px);
+}
+
+.login-container button {
+  background-color: #02770c;
+  font-size: 2rem;
+}

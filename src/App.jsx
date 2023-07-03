@@ -3,6 +3,8 @@ import axios from "axios";
 import "./App.css"
 import NavBar from "./components/NavBar";
 import Item from "./components/Item";
+import Login from "./components/Login";
+import Main from "./components/Main";
 
 function App() {
     document.title = 'spotify-stats'
@@ -17,13 +19,9 @@ function App() {
     const [searchKey, setSearchKey] = useState("")
     const [artists, setArtists] = useState([])
 
-    const [accessToken, setAccessToken] = useState("");
+    // const [accessToken, setAccessToken] = useState("");
  
-    const [topItems, setTopItems] = useState([]);
-
-    const [requestType, setRequestType] = useState("");
-
-    const [requestTerm, setRequestTerm] = useState("medium_term");
+    
 
     const [isLoggedIn, setIsLoggedIn] = useState(true);
 
@@ -38,7 +36,7 @@ function App() {
             getAccessToken(CLIENT_ID, code);
         }
 
-        console.log('localstorage access-token:', localStorage.getItem('access_token'));
+        // console.log('localstorage access-token:', localStorage.getItem('access_token'));
     
         // const hash = window.location.hash
         // let token = window.localStorage.getItem("token")
@@ -96,7 +94,7 @@ function App() {
         });
       
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
     }
 
 
@@ -114,24 +112,8 @@ function App() {
         }
     }
 
-    async function getTopItems(accessTokenn, itemType, timeRange) {
-        console.log(`https://api.spotify.com/v1/me/top/${itemType}`)
-        try {
-            const response = await fetch(`https://api.spotify.com/v1/me/top/${itemType}?time_range=${timeRange}`, {
-                headers: {
-                   Authorization: 'Bearer ' + accessTokenn
-                }
-            });
-            const data = await response.json();
-            // console.log(data);
-            setTopItems(data.items);
-        } catch (err) {
-            console.error(err);
-        }
-    }
 
     const logout = () => {
-        console.log('button pressed');
         setToken("")
         window.localStorage.removeItem("token")
         //added
@@ -217,59 +199,12 @@ function App() {
 
     return (
         <div className="App">
-            <NavBar logout={logout} />
-                {/* {!token ?
-                    <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Login
-                        to Spotify</a>
-                    : <button onClick={logout}>Logout</button>} */}
-            {/* <form onSubmit={searchArtists}>
-                <input type="text" onChange={e => setSearchKey(e.target.value)}/>
-                <button type={"submit"}>Search</button>
-            </form> */}
+            <NavBar isLoggedIn={isLoggedIn} logout={logout} />
             { isLoggedIn ?
-            <main>
-            <div className="top-items-input-container">
-                <div>
-                    <p>type:</p>
-                    <button className={requestType === 'artists' && "selected"}
-                    onClick={() => setRequestType("artists")}>
-                        artists
-                    </button>
-                    <button className={requestType === 'tracks' && "selected"}
-                    onClick={() => setRequestType("tracks")}>
-                        tracks
-                    </button>
-                </div>
-                <div>
-                    <p>term:</p>
-                    <button className={requestTerm === 'short_term' && "selected"}
-                    onClick={() => setRequestTerm("short_term")}>
-                        short term (last 4 weeks)
-                    </button>
-                    <button className={requestTerm === 'medium_term' && "selected"}
-                    onClick={() => setRequestTerm("medium_term")}>
-                        medium term (last 6 months)
-                    </button>
-                    <button className={requestTerm === 'long_term' && "selected"}
-                    onClick={() => setRequestTerm("long_term")}>
-                        all time
-                    </button>
-                </div>
-                <button className="get-request" onClick={() => getTopItems(localStorage.getItem('access_token'), requestType, requestTerm)}>
-                    get request &gt;
-                </button>
-            </div>
-            <div className="top-items-container">
-                {topItems.map((item) => {
-                    return <Item item={item} />
-                })}
-            </div>
-        </main>
-        : 
-        <div className="login-container">
-            <button className="login" onClick={login}>login</button>
-        </div>
-         }
+                <Main />
+            : 
+                <Login login={login} />
+            }
         </div>
     );
 }
