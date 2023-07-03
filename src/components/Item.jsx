@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Item(props) {
     return (
-        <div key={props.item.id}>
+        <div>
             <p>{props.item.name}</p>
         </div>
     )

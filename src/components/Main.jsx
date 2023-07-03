@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState, useEffect } from "react";
 import Item from "./Item";
 
 export default function Main(props) {
@@ -16,12 +16,15 @@ export default function Main(props) {
                 }
             });
             const data = await response.json();
-            // console.log(data);
             props.setTopItems(data.items);
         } catch (err) {
             console.error(err);
         }
     }
+
+    useEffect(() => {
+
+    }, [props.topItems])
 
     return (
         <main>
@@ -57,8 +60,8 @@ export default function Main(props) {
                 </button>
             </div>
             <div className="top-items-container">
-                { props.toptItems && props.topItems.map((item) => {
-                    return <Item item={item} />
+                { props.topItems && props.topItems.map((item) => {
+                    return <Item key={item.id} item={item} />
                 })}
             </div>
         </main>
