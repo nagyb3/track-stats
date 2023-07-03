@@ -61,7 +61,8 @@ export default function Main(props) {
             </div>
             <div className="top-items-container">
                 { props.topItems && props.topItems.map((item) => {
-                    return <Item key={item.id} item={item} />
+                    return <Item type={requestType === 'artists' ? 'artists' : 'tracks'}
+                     key={item.id} item={item} />
                 })}
             </div>
         </main>
