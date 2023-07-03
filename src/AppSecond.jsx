@@ -18,33 +18,38 @@ function App() {
  
     const [topItems, setTopItems] = useState([]);
 
+    const [requestType, setRequestType] = useState("");
+
+    const [requestTerm, setRequestTerm] = useState("medium_term");
+
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
+        console.log('params:', params.get('code'))
         const code = params.get("code");
 
         if (!code) {
             redirectToAuthCodeFlow(CLIENT_ID);
         } else {
-            const accessToken = getAccessToken(CLIENT_ID, code);
+            // const accessToken = getAccessToken(CLIENT_ID, code);
+            getAccessToken(CLIENT_ID, code);
         }
 
-        // console.log(accessToken);
+        console.log('localstorage access-token:', localStorage.getItem('access_token'));
     
-        const hash = window.location.hash
-        let token = window.localStorage.getItem("token")
+        // const hash = window.location.hash
+        // let token = window.localStorage.getItem("token")
+        // if (!token && hash) {
+        //     //gets run on login to spotify button
+        //     token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
 
-        if (!token && hash) {
-            token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
-
-            window.location.hash = ""
-            window.localStorage.setItem("token", token)
-        }
-
-        setToken(token)
-
+        //     window.location.hash = ""
+        //     window.localStorage.setItem("token", token)
+        // }
+        // setToken(token);
         // getProfile(localStorage.getItem('access_token'));
-        getTopItems(localStorage.getItem('access_token'), 'tracks', 'short_term');
-        // console.log(localStorage.getItem('access_token'));
+
+        // getTopItems(localStorage.getItem('access_token'), 'artists', 'short_term');
+        
     }, [])
     
     // console.log(topItems);
@@ -164,6 +169,7 @@ function App() {
     }
 
     //redirect to spotify login page
+    //better auth !
     async function redirectToAuthCodeFlow(clientId) {
         const verifier = generateCodeVerifier(128);
         const challenge = await generateCodeChallenge(verifier);
@@ -203,16 +209,42 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Spotify React</h1>
-                {!token ?
+                <h1>header</h1>
+                {/* {!token ?
                     <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Login
                         to Spotify</a>
-                    : <button onClick={logout}>Logout</button>}
+                    : <button onClick={logout}>Logout</button>} */}
             </header>
-            <form onSubmit={searchArtists}>
+            {/* <form onSubmit={searchArtists}>
                 <input type="text" onChange={e => setSearchKey(e.target.value)}/>
                 <button type={"submit"}>Search</button>
-            </form>
+            </form> */}
+
+            <div>
+                <div>
+                    <p>type:</p>
+                    <button onClick={() => setRequestType("artists")}>artists</button>
+                    <button onClick={() => setRequestType("tracks")}>tracks</button>
+                </div>
+                <div>
+                    <p>term:</p>
+                    <button onClick={() => setRequestTerm("short_term")}>
+                        short term (last 4 weeks)
+                    </button>
+                    <button onClick={() => setRequestTerm("medium_term")}>
+                        medium term (last 6 months)
+                    </button>
+                    <button onClick={() => setRequestTerm("long_term")}>
+                        all time
+                    </button>
+                </div>
+                <button onClick={() => getTopItems(localStorage.getItem('access_token'), requestType, requestTerm)}>
+                    get request
+                </button>
+            </div>
+
+
+
             {renderArtists()}
             {renderTopItems()}
         </div>
