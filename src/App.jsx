@@ -1,6 +1,8 @@
 import {useState, useEffect} from "react";
 import axios from "axios";
 import "./App.css"
+import NavBar from "./components/NavBar";
+import Item from "./components/Item";
 
 function App() {
     document.title = 'spotify-stats'
@@ -201,8 +203,11 @@ function App() {
             .replace(/=+$/, '');
     }
 
+    console.log(topItems)
+
     return (
         <div className="App">
+            <NavBar />
             <header className="App-header">
                 <h1>header</h1>
                 {/* {!token ?
@@ -246,7 +251,11 @@ function App() {
                 </button>
             </div>
             {/* {renderArtists()} */}
-            {renderTopItems()}
+            <div className="top-items-container">
+                {topItems.map((item) => {
+                    return <Item item={item} />
+                })}
+            </div>
         </div>
     );
 }
