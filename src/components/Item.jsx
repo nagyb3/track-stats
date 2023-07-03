@@ -1,14 +1,13 @@
 import React from "react";
 
 export default function Item(props) {
+    console.log(props.item);
 
     const [thisType, setThisType] = React.useState(props.type); 
-    // console.log(props.item.album.images[0].url);
-    // console.log(props.item.images[0].url);  
     return (
         <div className="item-container">
-            <p className="name">{props.item.name}</p>
-            {thisType === 'tracks' ? <p>{props.item.artists[0].name}</p> : undefined}
+            <p className="name"><a target="_blank" href={props.item.external_urls.spotify}>{props.item.name}</a></p>
+            {thisType === 'tracks' ? <p><a target="_blank" href={props.item.artists[0].external_urls.spotify}>{props.item.artists[0].name}</a></p> : undefined}
             {thisType === 'tracks' ? <img src={props.item.album.images[0].url} />
             : <img src={props.item.images[0].url} />}
         </div>
