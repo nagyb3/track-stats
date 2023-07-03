@@ -129,8 +129,12 @@ function App() {
     }
 
     const logout = () => {
+        console.log('button pressed');
         setToken("")
         window.localStorage.removeItem("token")
+        //added
+        window.localStorage.removeItem("access_token")
+        setTopItems([]);
     }
 
     const searchArtists = async (e) => {
@@ -207,7 +211,7 @@ function App() {
 
     return (
         <div className="App">
-            <NavBar />
+            <NavBar logout={logout} />
             <header className="App-header">
                 <h1>header</h1>
                 {/* {!token ?
