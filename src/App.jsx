@@ -25,9 +25,10 @@ function App() {
 
     const [requestTerm, setRequestTerm] = useState("medium_term");
 
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        console.log('params:', params.get('code'))
         const code = params.get("code");
 
         if (!code) {
@@ -80,6 +81,7 @@ function App() {
         })
         .then(data => {
             localStorage.setItem('access_token', data.access_token);
+            setIsLoggedIn(true);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -135,6 +137,7 @@ function App() {
         //added
         window.localStorage.removeItem("access_token")
         setTopItems([]);
+        setIsLoggedIn(false);
     }
 
     const searchArtists = async (e) => {
@@ -207,46 +210,48 @@ function App() {
             .replace(/=+$/, '');
     }
 
-    console.log(topItems)
+    function login() {
+        redirectToAuthCodeFlow(CLIENT_ID);
+        getAccessToken(CLIENT_ID, code);
+    }
 
     return (
         <div className="App">
             <NavBar logout={logout} />
-            <header className="App-header">
-                <h1>header</h1>
                 {/* {!token ?
                     <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Login
                         to Spotify</a>
                     : <button onClick={logout}>Logout</button>} */}
-            </header>
             {/* <form onSubmit={searchArtists}>
                 <input type="text" onChange={e => setSearchKey(e.target.value)}/>
                 <button type={"submit"}>Search</button>
             </form> */}
+            { isLoggedIn ?
+            <main>
             <div className="top-items-input-container">
                 <div>
                     <p>type:</p>
                     <button className={requestType === 'artists' && "selected"}
-                     onClick={() => setRequestType("artists")}>
+                    onClick={() => setRequestType("artists")}>
                         artists
                     </button>
                     <button className={requestType === 'tracks' && "selected"}
-                     onClick={() => setRequestType("tracks")}>
+                    onClick={() => setRequestType("tracks")}>
                         tracks
                     </button>
                 </div>
                 <div>
                     <p>term:</p>
                     <button className={requestTerm === 'short_term' && "selected"}
-                     onClick={() => setRequestTerm("short_term")}>
+                    onClick={() => setRequestTerm("short_term")}>
                         short term (last 4 weeks)
                     </button>
                     <button className={requestTerm === 'medium_term' && "selected"}
-                     onClick={() => setRequestTerm("medium_term")}>
+                    onClick={() => setRequestTerm("medium_term")}>
                         medium term (last 6 months)
                     </button>
                     <button className={requestTerm === 'long_term' && "selected"}
-                     onClick={() => setRequestTerm("long_term")}>
+                    onClick={() => setRequestTerm("long_term")}>
                         all time
                     </button>
                 </div>
@@ -254,12 +259,17 @@ function App() {
                     get request &gt;
                 </button>
             </div>
-            {/* {renderArtists()} */}
             <div className="top-items-container">
                 {topItems.map((item) => {
                     return <Item item={item} />
                 })}
             </div>
+        </main>
+        : 
+        <div className="login-container">
+            <button className="login" onClick={login}>login</button>
+        </div>
+         }
         </div>
     );
 }

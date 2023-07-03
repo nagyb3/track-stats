@@ -69,3 +69,7 @@ nav ul {
   display: flex;
   list-style-type: none;
 }
+
+nav .logout:hover {
+  cursor: pointer;
+}
