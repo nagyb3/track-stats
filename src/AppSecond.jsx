@@ -1,5 +1,6 @@
 import {useState, useEffect} from "react";
 import axios from "axios";
+import "./App.css"
 
 function App() {
     document.title = 'spotify-stats'
@@ -52,8 +53,6 @@ function App() {
         
     }, [])
     
-    // console.log(topItems);
-    
     async function getAccessToken(CLIENT_ID, code) {
         const verifier = localStorage.getItem("verifier");
         const paramsSecond = new URLSearchParams();
@@ -76,11 +75,9 @@ function App() {
             throw new Error('HTTP status ' + response.status);
             }
             return response.json();
-            // setAccessToken(response);
         })
         .then(data => {
             localStorage.setItem('access_token', data.access_token);
-            // console.log("data:", data)
         })
         .catch(error => {
             console.error('Error:', error);
@@ -88,8 +85,6 @@ function App() {
     }
 
     async function getProfile(accessTokenn) {
-        // let accessToken = localStorage.getItem('access_token');
-      
         const response = await fetch('https://api.spotify.com/v1/me', {
           headers: {
             Authorization: 'Bearer ' + accessTokenn
@@ -219,33 +214,38 @@ function App() {
                 <input type="text" onChange={e => setSearchKey(e.target.value)}/>
                 <button type={"submit"}>Search</button>
             </form> */}
-
-            <div>
+            <div className="top-items-input-container">
                 <div>
                     <p>type:</p>
-                    <button onClick={() => setRequestType("artists")}>artists</button>
-                    <button onClick={() => setRequestType("tracks")}>tracks</button>
+                    <button className={requestType === 'artists' && "selected"}
+                     onClick={() => setRequestType("artists")}>
+                        artists
+                    </button>
+                    <button className={requestType === 'tracks' && "selected"}
+                     onClick={() => setRequestType("tracks")}>
+                        tracks
+                    </button>
                 </div>
                 <div>
                     <p>term:</p>
-                    <button onClick={() => setRequestTerm("short_term")}>
+                    <button className={requestTerm === 'short_term' && "selected"}
+                     onClick={() => setRequestTerm("short_term")}>
                         short term (last 4 weeks)
                     </button>
-                    <button onClick={() => setRequestTerm("medium_term")}>
+                    <button className={requestTerm === 'medium_term' && "selected"}
+                     onClick={() => setRequestTerm("medium_term")}>
                         medium term (last 6 months)
                     </button>
-                    <button onClick={() => setRequestTerm("long_term")}>
+                    <button className={requestTerm === 'long_term' && "selected"}
+                     onClick={() => setRequestTerm("long_term")}>
                         all time
                     </button>
                 </div>
-                <button onClick={() => getTopItems(localStorage.getItem('access_token'), requestType, requestTerm)}>
-                    get request
+                <button className="get-request" onClick={() => getTopItems(localStorage.getItem('access_token'), requestType, requestTerm)}>
+                    get request &gt;
                 </button>
             </div>
-
-
-
-            {renderArtists()}
+            {/* {renderArtists()} */}
             {renderTopItems()}
         </div>
     );
