@@ -85,3 +85,8 @@ nav .logout:hover {
   background-color: #02770c;
   font-size: 2rem;
 }
+
+div.top-items-input-container {
+  box-sizing: border-box;
+  padding: 50px;
+}

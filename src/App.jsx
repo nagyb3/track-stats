@@ -21,7 +21,7 @@ function App() {
 
     // const [accessToken, setAccessToken] = useState("");
  
-    
+    const [topItems, setTopItems] = useState([]);
 
     const [isLoggedIn, setIsLoggedIn] = useState(true);
 
@@ -201,7 +201,7 @@ function App() {
         <div className="App">
             <NavBar isLoggedIn={isLoggedIn} logout={logout} />
             { isLoggedIn ?
-                <Main />
+                <Main topItems={topItems} setTopItems={setTopItems} />
             : 
                 <Login login={login} />
             }
