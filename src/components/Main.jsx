@@ -29,34 +29,34 @@ export default function Main(props) {
     return (
         <main>
             <div className="top-items-input-container">
-                <div>
-                    <p>type:</p>
+                <div className="select-type">
+                    <p>Select type:</p>
                     <button className={requestType === 'artists' ? "selected" : undefined}
                     onClick={() => setRequestType("artists")}>
-                        artists
+                        Artists
                     </button>
                     <button className={requestType == 'tracks' ? "selected" : undefined}
                     onClick={() => setRequestType("tracks")}>
-                        tracks
+                        Tracks
                     </button>
                 </div>
-                <div>
-                    <p>term:</p>
+                <div className="select-term">
+                    <p>Select Term:</p>
                     <button className={requestTerm === 'short_term' ? "selected" : undefined}
                     onClick={() => setRequestTerm("short_term")}>
-                        short term (last 4 weeks)
+                        Last 4 weeks
                     </button>
                     <button className={requestTerm === 'medium_term' ? "selected" : undefined}
                     onClick={() => setRequestTerm("medium_term")}>
-                        medium term (last 6 months)
+                        Last 6 months
                     </button>
                     <button className={requestTerm === 'long_term' ? "selected" : undefined}
                     onClick={() => setRequestTerm("long_term")}>
-                        all time
+                        All time
                     </button>
                 </div>
                 <button className="get-request" onClick={() => getTopItems(localStorage.getItem('access_token'), requestType, requestTerm)}>
-                    get request &gt;
+                    GET REQUEST &gt;
                 </button>
             </div>
             <div className="top-items-container">
