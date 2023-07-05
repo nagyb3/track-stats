@@ -144,3 +144,20 @@ a:hover {
   font-weight: 600;
   font-size: 1.1rem;
 }
+
+@media (prefers-color-scheme: light)  {
+  .item-container {
+    border-color: black;
+    box-shadow: 3px 3px 0px #000000;
+    background-color: #e7f5e8;
+  }
+  a {
+    color: black;
+  }
+  .select-term p, .select-type p {
+    color: black;
+  }
+  button.login {
+    color: white;
+  }
+}
