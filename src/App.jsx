@@ -17,12 +17,11 @@ function App() {
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const code = params.get("code");
-
-        if (!code) {
-            redirectToAuthCodeFlow(CLIENT_ID);
-        } else {
+        if (params.has("code")) {
+            const code = params.get("code");
             getAccessToken(CLIENT_ID, code);
+        } else {
+            redirectToAuthCodeFlow(CLIENT_ID);
         }
     }, []);
     
