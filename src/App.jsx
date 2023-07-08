@@ -32,7 +32,7 @@ function App() {
         paramsSecond.append("client_id", CLIENT_ID);
         paramsSecond.append("grant_type", "authorization_code");
         paramsSecond.append("code", code);
-        paramsSecond.append("redirect_uri", "http://localhost:5173/callback");
+        paramsSecond.append("redirect_uri", import.meta.env.VITE_REDIRECT_URI);
         paramsSecond.append("code_verifier", verifier);
 
         const response = fetch('https://accounts.spotify.com/api/token', {
