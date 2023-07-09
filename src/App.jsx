@@ -13,28 +13,42 @@ function App() {
     
     const [topItems, setTopItems] = useState([]);
 
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    console.log(localStorage.getItem('access_token'));
+    console.log(localStorage.getItem('access_token') === null);
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        if (params.has("code")) {
-            const code = params.get("code");
-            getAccessToken(CLIENT_ID, code);
-        } else {
-            redirectToAuthCodeFlow(CLIENT_ID);
+        const fetchData = async() => {
+            if (localStorage.getItem('access_token') === null) {
+                const params = new URLSearchParams(window.location.search);
+                const code = params.get("code");
+                if (code) {
+                    console.log('kasoidowa')
+                    await getAccessToken(CLIENT_ID, code);
+                    setIsLoggedIn(true);
+                }
+            }
+        // console.log('useeffect ran')
+        // if (localStorage.getItem('access_token') !== null) {
+        //     console.log('in')
+        //     setIsLoggedIn(true);
+        // }
+        
         }
+        fetchData();
     }, []);
     
-    async function getAccessToken(CLIENT_ID, code) {
+    async function getAccessToken(clientVar, code) {
         const verifier = localStorage.getItem("verifier");
         const paramsSecond = new URLSearchParams();
         
-        paramsSecond.append("client_id", CLIENT_ID);
+        paramsSecond.append("client_id", clientVar);
         paramsSecond.append("grant_type", "authorization_code");
         paramsSecond.append("code", code);
         paramsSecond.append("redirect_uri", import.meta.env.VITE_REDIRECT_URI);
         paramsSecond.append("code_verifier", verifier);
-
+        // console.log(CLIENT_ID, '|', code, verifier)
         const response = fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {
@@ -44,7 +58,7 @@ function App() {
         })
         .then(response => {
             if (!response.ok) {
-            throw new Error('HTTP status ' + response.status);
+                throw new Error('HTTP status ' + response.status);
             }
             return response.json();
         })
@@ -57,20 +71,12 @@ function App() {
         });
     }
 
-    async function getProfile(accessTokenn) {
-        const response = await fetch('https://api.spotify.com/v1/me', {
-          headers: {
-            Authorization: 'Bearer ' + accessTokenn
-          }
-        });
-      
-        const data = await response.json();
-    }
-
     const logout = () => {
+        console.log('logout has been called')
         // setToken("")
         window.localStorage.removeItem("token")
         window.localStorage.removeItem("access_token")
+        window.location = import.meta.env.VITE_HOME_URI
         setTopItems([]);
         setIsLoggedIn(false);
     }
@@ -112,9 +118,14 @@ function App() {
             .replace(/=+$/, '');
     }
 
-    function login() {
-        redirectToAuthCodeFlow(CLIENT_ID);
-        getAccessToken(CLIENT_ID, code);
+    const login = async() => {
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get("code");
+        if (!code) {
+            redirectToAuthCodeFlow(CLIENT_ID);
+        } else {
+            await getAccessToken(CLIENT_ID, code);
+        }
     }
 
     return (
