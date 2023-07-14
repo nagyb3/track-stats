@@ -19,16 +19,21 @@ function App() {
     console.log(localStorage.getItem('access_token') === null);
 
     useEffect(() => {
+        setIsLoggedIn(false);
+        //check if code
+        // true: setisloggedin true
         const fetchData = async() => {
-            if (localStorage.getItem('access_token') === null) {
-                const params = new URLSearchParams(window.location.search);
-                const code = params.get("code");
-                if (code) {
-                    console.log('kasoidowa')
-                    await getAccessToken(CLIENT_ID, code);
-                    setIsLoggedIn(true);
-                }
+            // if (localStorage.getItem('access_token') === null) {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get("code");
+            if (localStorage.getItem('access_token') !== null) {
+                setIsLoggedIn(true);
+            } else if (code) {
+                // console.log('kasoidowa')
+                await getAccessToken(CLIENT_ID, code);
+                setIsLoggedIn(true);
             }
+            // }
         // console.log('useeffect ran')
         // if (localStorage.getItem('access_token') !== null) {
         //     console.log('in')
@@ -64,7 +69,7 @@ function App() {
         })
         .then(data => {
             localStorage.setItem('access_token', data.access_token);
-            setIsLoggedIn(true);
+            // setIsLoggedIn(true);
         })
         .catch(error => {
             console.error('Error:', error);
