@@ -8,38 +8,22 @@ function App() {
     document.title = 'spotify-stats';
 
     const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-
-    // const [token, setToken] = useState("");
     
     const [topItems, setTopItems] = useState([]);
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    console.log(localStorage.getItem('access_token'));
-    console.log(localStorage.getItem('access_token') === null);
-
     useEffect(() => {
         setIsLoggedIn(false);
-        //check if code
-        // true: setisloggedin true
         const fetchData = async() => {
-            // if (localStorage.getItem('access_token') === null) {
             const params = new URLSearchParams(window.location.search);
             const code = params.get("code");
             if (localStorage.getItem('access_token') !== null) {
                 setIsLoggedIn(true);
             } else if (code) {
-                // console.log('kasoidowa')
                 await getAccessToken(CLIENT_ID, code);
                 setIsLoggedIn(true);
             }
-            // }
-        // console.log('useeffect ran')
-        // if (localStorage.getItem('access_token') !== null) {
-        //     console.log('in')
-        //     setIsLoggedIn(true);
-        // }
-        
         }
         fetchData();
     }, []);
@@ -53,7 +37,6 @@ function App() {
         paramsSecond.append("code", code);
         paramsSecond.append("redirect_uri", import.meta.env.VITE_REDIRECT_URI);
         paramsSecond.append("code_verifier", verifier);
-        // console.log(CLIENT_ID, '|', code, verifier)
         const response = fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {
@@ -69,7 +52,6 @@ function App() {
         })
         .then(data => {
             localStorage.setItem('access_token', data.access_token);
-            // setIsLoggedIn(true);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -77,8 +59,6 @@ function App() {
     }
 
     const logout = () => {
-        console.log('logout has been called')
-        // setToken("")
         window.localStorage.removeItem("token")
         window.localStorage.removeItem("access_token")
         window.location = import.meta.env.VITE_HOME_URI
