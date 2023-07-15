@@ -59,7 +59,6 @@ function App() {
     }
 
     const logout = () => {
-        window.localStorage.removeItem("token")
         window.localStorage.removeItem("access_token")
         window.location = import.meta.env.VITE_HOME_URI
         setTopItems([]);
