@@ -60,8 +60,7 @@ function App() {
 
     const logout = () => {
         window.localStorage.removeItem("access_token")
-        // window.location.href = import.meta.env.VITE_HOME_URI
-        window.location.href = "/";
+        window.location.href = import.meta.env.VITE_HOME_URI
         setTopItems([]);
         setIsLoggedIn(false);
     }
