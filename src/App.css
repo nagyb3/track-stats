@@ -56,7 +56,13 @@ nav .logout:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 100px);
+  height: calc(45vh - 100px);
+}
+
+.description {
+  max-width: 70vh;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .login-container button {
@@ -199,4 +205,9 @@ a:hover {
     grid-template-rows: repeat(5, 1fr);
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+.description a {
+  color: #7dfd87;
+  text-decoration: underline;
 }
