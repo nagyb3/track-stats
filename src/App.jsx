@@ -5,7 +5,7 @@ import Login from "./components/Login";
 import Main from "./components/Main";
 
 function App() {
-    document.title = 'spotify-stats';
+    document.title = 'track-stats';
 
     const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
     
