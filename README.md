@@ -1,4 +1,4 @@
-# spotify-stats
+# track-stat
 
 A React project made using the Spotify API. 
 
