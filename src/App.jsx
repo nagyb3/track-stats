@@ -5,7 +5,7 @@ import Login from "./components/Login";
 import Main from "./components/Main";
 
 function App() {
-    document.title = 'track-stats';
+    document.title = 'track-stat';
 
     const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
     
