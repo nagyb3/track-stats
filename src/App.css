@@ -211,3 +211,15 @@ a:hover {
   color: #7dfd87;
   text-decoration: underline;
 }
+
+img.spotify-icon {
+  width: 3rem;
+}
+
+.top-row-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
