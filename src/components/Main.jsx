@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import Item from "./Item";
 
 export default function Main(props) {
-  const [requestType, setRequestType] = useState("");
+  const [requestType, setRequestType] = useState("tracks");
 
-  const [requestTerm, setRequestTerm] = useState("medium_term");
+  const [requestTerm, setRequestTerm] = useState("short_term");
 
   async function getTopItems(accessTokenn, itemType, timeRange) {
     try {
