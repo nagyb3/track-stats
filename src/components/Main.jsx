@@ -65,9 +65,6 @@ export default function Main(props) {
             </button>
           </div>
         )}
-        {/* <button className="get-request" onClick={() => getTopItems(localStorage.getItem('access_token'), requestType, requestTerm)}>
-                    GET REQUEST &gt;
-                </button> */}
       </div>
       <div className="top-items-container">
         {props.topItems &&

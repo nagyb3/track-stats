@@ -30,18 +30,21 @@ function App() {
 
   async function getAccessToken(clientVar, code) {
     const verifier = localStorage.getItem("verifier");
-    const paramsSecond = new URLSearchParams();
-    paramsSecond.append("client_id", clientVar);
-    paramsSecond.append("grant_type", "authorization_code");
-    paramsSecond.append("code", code);
-    paramsSecond.append("redirect_uri", import.meta.env.VITE_REDIRECT_URI);
-    paramsSecond.append("code_verifier", verifier);
+    const bodyUrlSearchParam = new URLSearchParams();
+    bodyUrlSearchParam.append("client_id", clientVar);
+    bodyUrlSearchParam.append("grant_type", "authorization_code");
+    bodyUrlSearchParam.append("code", code);
+    bodyUrlSearchParam.append(
+      "redirect_uri",
+      import.meta.env.VITE_REDIRECT_URI
+    );
+    bodyUrlSearchParam.append("code_verifier", verifier);
     const response = fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: paramsSecond,
+      body: bodyUrlSearchParam,
     })
       .then((response) => {
         return response.json();
@@ -62,12 +65,12 @@ function App() {
     setIsLoggedIn(false);
   };
 
-  const getTopItems = (accessTokenn, itemType, timeRange) => {
+  const getTopItems = (accessToken, itemType, timeRange) => {
     fetch(
       `https://api.spotify.com/v1/me/top/${itemType}?time_range=${timeRange}`,
       {
         headers: {
-          Authorization: "Bearer " + accessTokenn,
+          Authorization: "Bearer " + accessToken,
         },
       }
     )
@@ -83,25 +86,22 @@ function App() {
   async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
-
     localStorage.setItem("verifier", verifier);
+    const searchParams = new URLSearchParams();
+    searchParams.append("client_id", clientId);
+    searchParams.append("response_type", "code");
+    searchParams.append("redirect_uri", import.meta.env.VITE_REDIRECT_URI);
+    searchParams.append("scope", "user-top-read");
+    searchParams.append("code_challenge_method", "S256");
+    searchParams.append("code_challenge", challenge);
 
-    const params = new URLSearchParams();
-    params.append("client_id", clientId);
-    params.append("response_type", "code");
-    params.append("redirect_uri", import.meta.env.VITE_REDIRECT_URI);
-    params.append("scope", "user-top-read");
-    params.append("code_challenge_method", "S256");
-    params.append("code_challenge", challenge);
-
-    document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
+    document.location = `https://accounts.spotify.com/authorize?${searchParams.toString()}`;
   }
 
   function generateCodeVerifier(length) {
     let text = "";
     let possible =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
     for (let i = 0; i < length; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
