@@ -31,7 +31,6 @@ function App() {
   async function getAccessToken(clientVar, code) {
     const verifier = localStorage.getItem("verifier");
     const paramsSecond = new URLSearchParams();
-
     paramsSecond.append("client_id", clientVar);
     paramsSecond.append("grant_type", "authorization_code");
     paramsSecond.append("code", code);
@@ -45,13 +44,11 @@ function App() {
       body: paramsSecond,
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("HTTP status " + response.status);
-        }
         return response.json();
       })
       .then((data) => {
         localStorage.setItem("access_token", data.access_token);
+        getTopItems(data.access_token, "tracks", "short_term");
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -65,6 +62,24 @@ function App() {
     setIsLoggedIn(false);
   };
 
+  const getTopItems = (accessTokenn, itemType, timeRange) => {
+    fetch(
+      `https://api.spotify.com/v1/me/top/${itemType}?time_range=${timeRange}`,
+      {
+        headers: {
+          Authorization: "Bearer " + accessTokenn,
+        },
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setTopItems(data.items);
+      })
+      .catch((err) => console.error(err));
+  };
+
   async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
@@ -75,7 +90,7 @@ function App() {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", import.meta.env.VITE_REDIRECT_URI);
-    params.append("scope", "user-top-read user-read-private user-read-email");
+    params.append("scope", "user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -116,7 +131,11 @@ function App() {
     <div className="App">
       <NavBar isLoggedIn={isLoggedIn} logout={logout} />
       {isLoggedIn ? (
-        <Main topItems={topItems} setTopItems={setTopItems} />
+        <Main
+          getTopItems={getTopItems}
+          topItems={topItems}
+          setTopItems={setTopItems}
+        />
       ) : (
         <Login login={login} />
       )}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import Item from "./Item";
 
 export default function Main(props) {
@@ -6,26 +6,13 @@ export default function Main(props) {
 
   const [requestTerm, setRequestTerm] = useState("short_term");
 
-  async function getTopItems(accessTokenn, itemType, timeRange) {
-    try {
-      const response = await fetch(
-        `https://api.spotify.com/v1/me/top/${itemType}?time_range=${timeRange}`,
-        {
-          headers: {
-            Authorization: "Bearer " + accessTokenn,
-          },
-        }
-      );
-      const data = await response.json();
-      props.setTopItems(data.items);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
   useEffect(() => {
-    if (requestType !== "") {
-      getTopItems(
+    if (
+      requestType !== "" &&
+      requestTerm !== "" &&
+      localStorage.getItem("access_token") !== null
+    ) {
+      props.getTopItems(
         localStorage.getItem("access_token"),
         requestType,
         requestTerm
