@@ -60,13 +60,13 @@ nav .logout:hover {
 }
 
 .description {
-  max-width: 70vh;
+  max-width: 70vw;
   margin-left: auto;
   margin-right: auto;
 }
 
 .login-container button {
-  background-color: #02770c;
+  background-color: green;
   font-size: 2rem;
 }
 
@@ -77,7 +77,7 @@ div.top-items-input-container {
   align-self: start;
   width: 100%;
 }
- 
+
 .item-container {
   border: 1px solid white;
   border-radius: 3px;
@@ -133,7 +133,8 @@ a:hover {
   background-color: #41ff51;
 }
 
-.select-term, .select-type {
+.select-term,
+.select-type {
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
@@ -143,23 +144,25 @@ a:hover {
   justify-content: center;
 }
 
-.select-term button, .select-type button {
+.select-term button,
+.select-type button {
   box-shadow: 1px 1px 1px darkgrey;
   border: 1px solid darkgrey;
 }
 
-
-.select-term button:hover, .select-type button:hover {
+.select-term button:hover,
+.select-type button:hover {
   position: relative;
   top: -2px;
 }
 
-.select-term p, .select-type p {
+.select-term p,
+.select-type p {
   font-weight: 600;
   font-size: 1.1rem;
 }
 
-@media (prefers-color-scheme: light)  {
+@media (prefers-color-scheme: light) {
   .item-container {
     border-color: black;
     box-shadow: 3px 3px 0px #000000;
@@ -168,7 +171,8 @@ a:hover {
   a {
     color: black;
   }
-  .select-term p, .select-type p {
+  .select-term p,
+  .select-type p {
     color: black;
   }
   button.login {
@@ -197,6 +201,9 @@ a:hover {
   }
   .select-term {
     gap: 10px;
+  }
+  button.login {
+    font-size: 1.5rem;
   }
 }
 
