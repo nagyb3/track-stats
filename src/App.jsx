@@ -5,8 +5,6 @@ import Login from "./components/Login";
 import Main from "./components/Main";
 
 function App() {
-  document.title = "track-stat";
-
   const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 
   const [topItems, setTopItems] = useState([]);
@@ -14,6 +12,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    document.title = "track-stats";
     setIsLoggedIn(false);
     const fetchData = async () => {
       const params = new URLSearchParams(window.location.search);

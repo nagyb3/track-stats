@@ -24,7 +24,7 @@ nav {
   min-width: 100vw;
   display: flex;
   align-items: center;
-  height: 100px;
+  height: 60px;
   justify-content: space-between;
   padding: 0 50px;
   box-sizing: border-box;
@@ -60,7 +60,7 @@ nav .logout:hover {
 }
 
 .description {
-  max-width: 70vw;
+  max-width: 85vw;
   margin-left: auto;
   margin-right: auto;
 }
@@ -175,9 +175,6 @@ a:hover {
   .select-type p {
     color: black;
   }
-  button.login {
-    color: white;
-  }
 }
 
 @media (max-width: 850px) {
@@ -205,6 +202,16 @@ a:hover {
   button.login {
     font-size: 1.5rem;
   }
+  .description p {
+    font-size: 14px;
+  }
+  .description h2 {
+    font-size: 20px;
+  }
+}
+
+button.login {
+  color: white;
 }
 
 @media (min-width: 1200px) {
