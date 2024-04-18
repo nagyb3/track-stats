@@ -1,5 +1,11 @@
-import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import { useState, useEffect } from "react";
 import Item from "./Item";
+import PropTypes from "prop-types";
+
+Main.propTypes = {
+  getTopItems: PropTypes.func.isRequired,
+  topItems: PropTypes.array,
+};
 
 export default function Main(props) {
   const [requestType, setRequestType] = useState("tracks");
@@ -10,14 +16,15 @@ export default function Main(props) {
     if (
       requestType !== "" &&
       requestTerm !== "" &&
-      localStorage.getItem("access_token") !== null
+      sessionStorage.getItem("access_token") !== null
     ) {
       props.getTopItems(
-        localStorage.getItem("access_token"),
+        sessionStorage.getItem("access_token"),
         requestType,
         requestTerm
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestType, requestTerm]);
 
   return (
