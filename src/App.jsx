@@ -17,7 +17,7 @@ function App() {
     const fetchData = async () => {
       const params = new URLSearchParams(window.location.search);
       const code = params.get("code");
-      if (localStorage.getItem("access_token") !== null) {
+      if (sessionStorage.getItem("access_token") !== null) {
         setIsLoggedIn(true);
       } else if (code) {
         await getAccessToken(CLIENT_ID, code);
@@ -25,10 +25,11 @@ function App() {
       }
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function getAccessToken(clientVar, code) {
-    const verifier = localStorage.getItem("verifier");
+    const verifier = sessionStorage.getItem("verifier");
     const bodyUrlSearchParam = new URLSearchParams();
     bodyUrlSearchParam.append("client_id", clientVar);
     bodyUrlSearchParam.append("grant_type", "authorization_code");
@@ -38,7 +39,7 @@ function App() {
       import.meta.env.VITE_REDIRECT_URI
     );
     bodyUrlSearchParam.append("code_verifier", verifier);
-    const response = fetch("https://accounts.spotify.com/api/token", {
+    fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -49,7 +50,7 @@ function App() {
         return response.json();
       })
       .then((data) => {
-        localStorage.setItem("access_token", data.access_token);
+        sessionStorage.setItem("access_token", data.access_token);
         getTopItems(data.access_token, "tracks", "short_term");
       })
       .catch((error) => {
@@ -58,7 +59,7 @@ function App() {
   }
 
   const logout = () => {
-    window.localStorage.removeItem("access_token");
+    sessionStorage.removeItem("access_token");
     window.location.href = import.meta.env.VITE_HOME_URI;
     setTopItems([]);
     setIsLoggedIn(false);
@@ -85,7 +86,7 @@ function App() {
   async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
-    localStorage.setItem("verifier", verifier);
+    sessionStorage.setItem("verifier", verifier);
     const searchParams = new URLSearchParams();
     searchParams.append("client_id", clientId);
     searchParams.append("response_type", "code");
