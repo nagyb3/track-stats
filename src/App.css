@@ -92,6 +92,12 @@ div.top-items-input-container {
   justify-content: center;
 }
 
+.item-container:hover {
+  position: relative !important;
+  top: -2px !important;
+  box-shadow: 3px 5px 0px 0px #ffffff;
+}
+
 .item-container img {
   width: 120px;
   height: auto;
@@ -104,7 +110,7 @@ div.top-items-input-container {
   gap: calc(50px + 3vw);
   box-sizing: content-box;
   max-width: 90vw;
-  margin: 30px;
+  margin: 30px 30px 150px 30px;
 }
 
 .item-container p.name {

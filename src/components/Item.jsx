@@ -12,7 +12,11 @@ export default function Item(props) {
     <div className="item-container">
       <div className="top-row-container">
         <p className="name">
-          <a target="_blank" href={props.item.external_urls.spotify}>
+          <a
+            target="_blank"
+            href={props.item.external_urls.spotify}
+            rel="noreferrer"
+          >
             {props.item.name}
           </a>
         </p>
